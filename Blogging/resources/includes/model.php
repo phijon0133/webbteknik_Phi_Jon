@@ -1,5 +1,6 @@
 <?php
 
+//Simple array for topics - Övning 4
 // $model = array("Första inlägget", "Snart är det vår", "Robin presenterar sig", "Senaste inlägget");
 
 //2D Associative array for full posts - Övning 9
