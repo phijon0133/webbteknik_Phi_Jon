@@ -1,9 +1,5 @@
 <?php
-/*
-This is my solution for the laboration that Niklas Mårdby share on his wiki Porkforge.
-I've used this laboration to show my pupils how you can work with PHP in developement.
-http://porkforge.mardby.se/index.php?title=PHP_Laboration_3_-_Array_och_loopar
-*/
+
 
 require ('resources/includes/view.php');
 require ('resources/includes/model.php');
@@ -21,7 +17,6 @@ $page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_URL);
 // First check if $page is empty.
 if(empty($page)) {
 	$header = 'Start';
-	/*Old way from Beginning--> <div class="content">Long text...</div>*/
     $content = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum';
     require ('resources/templates/page-template.php');
 }
@@ -32,30 +27,16 @@ elseif($page == 'blogg') {
 	$template = 'all-blog-posts';
 	$post = filter_input(INPUT_GET, "post", FILTER_SANITIZE_URL);
 
-
-	//http://porkforge.mardby.se/index.php?title=PHP_Laboration_3_-_Array_och_loopar#.C3.96vning_4
-	//print_r($model);
-
-//	if (!empty($post)) {
-		//Loop through the $model array and check if the message exists.
-	//	foreach($model as $key => $slug) {
-		//	if ($model[$key]['slug'] == $post) {
-			//	$template = "single-blog-post";
-				//$title = $model[$key]['title'];
-			//	$author = $model[$key]['author'];
-				//$date = $model[$key]['date'];
-				//$message = $model[$key]['text'];
-			//}
-		//}
-	//}
+	// Post och Array Key som förklarar vart post kommer ifrån.
 	$post = filter_input(INPUT_GET, "post", FILTER_SANITIZE_URL);
 	if (array_key_exists($post, $model)) {
 	    $template ="single-blog-post";
 	    $title = $model[$post]["title"];
 	    $author = $model[$post]["author"];
 	    $date = $model[$post]["date"];
-	    $text = $model[$post]["text"];
+	    $text = $model[$post]["Text"];
 	}
+	// Error om det inte finns någon information att visa.
 	elseif (!empty($post)) {
 	    $header = "ERROR - 404";
 	    $error = "Den sökta sidan finns inte";
