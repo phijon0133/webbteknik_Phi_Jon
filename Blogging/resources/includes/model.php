@@ -1,48 +1,49 @@
 <?php
+require './resources/includes/config.php';
+require './resources/includes/dbh.inc.php';
 
-//Simple array for topics - Övning 4
-// $model = array("Första inlägget", "Snart är det vår", "Robin presenterar sig", "Senaste inlägget");
+$dbh = get_dbh();
 
+$template ="all-blog-posts";
 
-// Uppgifter för att logga in på PHPMyAdmin.
-$host = 'localhost';
-
-$dbname = 'blogg';
-
-$user = 'admin';
-
-$password = 'tisgot17';
-$dsn = "mysql:host=$host;dbname=$dbname;charset=utf8mb4";
-$attr = array(PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC);
+$sql = 'SELECT p.*, u.Username FROM posts AS p JOIN users AS u ON p.User_ID = u.ID';
+$order = 'DESC';
+$text = '';
 
 
-$pdo = new PDO($dsn, $user, $password, $attr);
+$sql .= " ORDER BY CREATION_Time {$order}";
 
-if($pdo) {
-//Definera model-array
-$sql = 'SELECT p.Slug, p.Headline, u.Username, p.Creation_time, p.Text FROM posts AS p JOIN users AS u ON p.User_ID = u.ID ORDER BY CREATION_Time DESC';
+$stmt = $dbh->prepare($sql);
+$stmt->execute();
+
 $model = array();
-
-//Assosiativ Array
-    echo "<pre>";
-    foreach($pdo->query($sql) as $row) {
-        $model += array(
-            $row['Slug'] => array(
-                     'title' => $row['Headline'],
-                     'author' => $row['Username'],
-                     'date' => $row['Creation_time'],
-                     'Text' => $row['Text']
-                 )
-
-        );
-
-    }
-
-    echo "</pre>";
-// else som ger dig ett error om du gjort nåt fel och förklarar varför. 
-} else {
-print_r($pdo->errorInfo());
+// definerar alla saker i den assosiativa arrayen
+//Assosiativ array
+foreach($stmt as $row){
+  $model += array(
+    $row['ID'] => array(
+      'slug' => $row['Slug'],
+      'title' => $row['Headline'],
+      'author' => $row['Username'],
+      'date' => $row['Creation_time'],
+      'Text' => $row['Text']
+      //'Comment'=> $row['Comment']
+    )
+  );
+}
+// om post finns så ska den ha single blog post som template samt en comment sedan kommer den få en title datum och text.  
+if (array_key_exists($post, $model)) {
+  $template ="single-blog-post";
+  $comments = fetch_comments($post, $dbh);
+  $title = $model[$post]["title"];
+  $author = $model[$post]["author"];
+  $date = $model[$post]["date"];
+  $text = $model[$post]["Text"];
 }
 
+elseif (!empty($post)) {
+  $template = "page";
+  $content = "skit";
+}
 
 ?>

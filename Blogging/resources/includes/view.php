@@ -38,4 +38,10 @@ function echoYear(){
     }
 }
 
+function shorttext($str){
+  $str = implode (' ',array_slice(explode(' ', $str),0,10));
+  return $str;
+}
+
+
 ?>
